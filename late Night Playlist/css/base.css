@@ -1,0 +1,24 @@
+:root {
+  color-scheme: dark;
+  --ink: #f1eff7;
+  --muted: #c2c1cb;
+  --dim: #9695a3;
+  --line: rgba(239, 237, 255, .15);
+  --glass: rgba(15, 19, 29, .56);
+  --lilac: #d2c7f4;
+  --warm: #f2cda1;
+  font-family: "Segoe UI", "Yu Gothic UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { position: relative; isolation: isolate; margin: 0; min-width: 320px; background: #111522; color: var(--ink); }
+button, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.site-backdrop { position: fixed; z-index: -1; inset: 0; overflow: hidden; background: linear-gradient(rgba(12,16,26,.18), rgba(12,16,26,.42)), url("../assets/room-night.png") center 52% / cover no-repeat; background-color: #111522; }
+.site-backdrop::before { position: absolute; inset: -2%; background: linear-gradient(101deg, transparent 5%, rgba(211,224,255,.055) 12%, transparent 24%, transparent 74%, rgba(211,224,255,.045) 87%, transparent 97%); content: ""; mix-blend-mode: screen; pointer-events: none; animation: curtain-sway 11s ease-in-out infinite alternate; }
+.site-backdrop::after { position: absolute; top: 0; left: 28%; width: 62%; height: 39%; background: radial-gradient(ellipse at 18% 58%, rgba(198,213,242,.075), transparent 24%), radial-gradient(ellipse at 49% 39%, rgba(198,213,242,.07), transparent 28%), radial-gradient(ellipse at 83% 48%, rgba(198,213,242,.06), transparent 25%); content: ""; filter: blur(18px); mix-blend-mode: screen; opacity: .7; pointer-events: none; animation: cloud-drift 70s ease-in-out infinite alternate; }

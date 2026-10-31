@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111522">
+    <meta name="description" content="A quiet room for late night playlists.">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
+    <title>Late Night Playlist</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/player.css">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/motion-responsive.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/playlists.js" defer></script>
+    <script src="js/state.js" defer></script>
+    <script src="js/player-ui.js" defer></script>
+    <script src="js/youtube.js" defer></script>
+    <script src="js/share.js" defer></script>
+    <script src="js/contact-address.js" defer></script>
+    <script src="js/contact.js" defer></script>
+    <script src="js/clock.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script type="module" src="js/online-count.js"></script>
+  </head>
+  <body>
+    <div class="site-backdrop" aria-hidden="true"></div>
+    <main>
+      <section class="hero" id="top" aria-labelledby="site-title">
+        <div class="hero-shade" aria-hidden="true"></div>
+        <header class="site-header">
+          <div class="brand-stack">
+            <a class="brand" href="#top" aria-label="Late Night Playlist home">
+              <span class="brand-moon" aria-hidden="true">☾</span>
+              <span>Late Night Playlist</span>
+            </a>
+            <div id="online-counter" class="online-counter hidden" role="status" aria-live="polite" aria-atomic="true">
+              <span class="online-dot" aria-hidden="true"></span>
+              <span id="online-count-value">—</span>
+              <span>Online</span>
+            </div>
+          </div>
+          <nav aria-label="Page navigation">
+            <a href="#about">About</a>
+            <button id="share-whatsapp" class="share-whatsapp" type="button" aria-label="Share Late Night Playlist on WhatsApp" title="Share on WhatsApp">
+              <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.5a12.4 12.4 0 0 0-10.6 18.8l-1.1 6 6.1-1.6A12.4 12.4 0 1 0 16 3.5Z"/><path d="M11.2 9.7c-.4 0-.8.2-1.1.6-.4.5-1 1.3-1 2.6s1 3 1.2 3.3c.2.3 2 3.2 4.9 4.3 2.4 1 2.9.8 3.5.7.5-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.4-.2-.8-.4l-2.1-1c-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.3-.7.1-.3-.1-1.2-.5-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-.9-2.2c-.2-.5-.4-.5-.7-.5h-.6Z"/></svg>
+            </button>
+          </nav>
+        </header>
+
+        <div class="hero-copy">
+          <time id="live-time" class="live-time" aria-label="Local time">--:--</time>
+          <p id="live-date" class="live-date">A quiet night</p>
+          <h1 id="site-title">Your room<br>for <em>late nights.</em></h1>
+        </div>
+
+        <div id="music-console" class="music-console" aria-label="Late night playlist player">
+          <div class="player-column">
+            <div id="youtube-stage" class="youtube-stage hidden">
+              <div id="youtube-player"></div>
+            </div>
+            <div class="glass-player">
+              <div class="vinyl-art" aria-hidden="true"><span>☾</span></div>
+              <div class="music-choice">
+                <span class="playing-label">NOW PLAYING</span>
+                <span id="player-hint" class="player-hint">Choose a playlist to begin</span>
+                <span id="active-playlist-name" class="active-playlist-name">Choose a playlist</span>
+              </div>
+              <div class="player-controls" role="group" aria-label="Music controls">
+                <div class="volume-control">
+                  <button id="volume-button" class="control-button small-control volume-button" type="button" aria-label="Volume" aria-expanded="false" aria-controls="volume-panel" disabled>
+                    <svg class="volume-on-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16 9a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12"/></svg>
+                    <svg class="volume-off-icon hidden" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 6m0-6-5 6"/></svg>
+                  </button>
+                  <div id="volume-panel" class="volume-panel hidden">
+                    <label for="volume-slider">Volume</label>
+                    <input id="volume-slider" type="range" min="0" max="100" value="70" aria-label="Playback volume" disabled>
+                  </div>
+                </div>
+                <button id="shuffle-button" class="control-button small-control" type="button" aria-label="Shuffle playlist" aria-pressed="false" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M4 4l5 5m4 4 8 8"/></svg>
+                </button>
+                <button id="previous-button" class="control-button" type="button" aria-label="Previous track" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-9 6 9 6z"/></svg>
+                </button>
+                <button id="play-button" class="control-button play-control" type="button" aria-label="Play" disabled>
+                  <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
+                  <svg class="pause-icon hidden" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg>
+                </button>
+                <button id="next-button" class="control-button" type="button" aria-label="Next track" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l9 6-9 6z"/></svg>
+                </button>
+                <button id="playlist-toggle" class="playlist-label" type="button" aria-expanded="false" aria-controls="playlist-list">PLAYLIST</button>
+              </div>
+              <div class="seek-row">
+                <time id="seek-current">0:00</time>
+                <label class="sr-only" for="seek-slider">Seek through the current track</label>
+                <input id="seek-slider" type="range" min="0" max="100" value="0" disabled>
+                <time id="seek-duration">0:00</time>
+              </div>
+            </div>
+          </div>
+          <aside id="playlist-list" class="playlist-list hidden" aria-label="Choose a playlist">
+            <p>PLAYLISTS</p>
+            <button class="playlist-option" type="button" data-playlist="hindi" aria-pressed="false">Hindi</button>
+            <button class="playlist-option" type="button" data-playlist="bengali" aria-pressed="false">Bengali</button>
+            <button class="playlist-option" type="button" data-playlist="punjabi" aria-pressed="false">Punjabi</button>
+            <button class="playlist-option" type="button" data-playlist="lofi" aria-pressed="false">Lo-fi &amp; instrumental</button>
+          </aside>
+        </div>
+
+      </section>
+
+      <section id="about" class="about-section" aria-labelledby="about-heading">
+        <h2 id="about-heading">About Late Night Playlist</h2>
+        <div class="faq-list">
+          <details open>
+            <summary>What is Late Night Playlist?</summary>
+            <p>A browser-based music player with curated playlists for listening late into the night.</p>
+          </details>
+          <details>
+            <summary>Does it work on a phone?</summary>
+            <p>Yes. The player is designed for mobile screens, with large play, skip, and seek controls.</p>
+          </details>
+          <details>
+            <summary>Where does the music play from?</summary>
+            <p>The songs play through YouTube's embedded player — nothing is hosted here, all rights remain with the artists and labels.</p>
+          </details>
+          <details>
+            <summary>Is Late Night Playlist free to listen to?</summary>
+            <p>Yes. Late Night Playlist is free to use in your browser and requires no sign-up or app download.</p>
+          </details>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <div class="footer-row">
+          <a class="brand" href="#top"><span class="brand-moon" aria-hidden="true">☾</span><span>Late Night Playlist</span></a>
+          <button id="contact-toggle" class="footer-contact" type="button" aria-expanded="false" aria-controls="contact-email">Contact</button>
+        </div>
+        <p id="contact-email" class="contact-email hidden" aria-live="polite"></p>
+        <p class="footer-credit">Made With <span aria-label="love">❤️</span> By <a href="https://github.com/GreenDiary" target="_blank" rel="noopener noreferrer">Akash</a></p>
+      </footer>
+    </main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
