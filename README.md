@@ -1,4 +1,4 @@
-# Late-Night-Playlist
+# Late Night Playlist
 
 A calm, anime-inspired night room for listening to curated music. The site is free to use, works on desktop and mobile, and does not require an account or app.
 

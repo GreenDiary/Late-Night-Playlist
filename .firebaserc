@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "late-night-playlist-5500"
+  },
+  "targets": {
+    "late-night-playlist-5500": {
+      "hosting": {
+        "live": [
+          "latenightplaylist"
+        ],
+        "old": [
+          "late-night-playlist-5500"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

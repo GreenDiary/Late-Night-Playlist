@@ -1,0 +1,15 @@
+# Firebase CLI local cache
+.firebase/
+
+# Dependencies if added later
+node_modules/
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local editor settings
+.vscode/
