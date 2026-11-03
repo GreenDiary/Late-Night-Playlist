@@ -28,6 +28,7 @@ let activePlaylist = null;
 let youtubePlayer = null;
 let youtubePlayerGeneration = 0;
 let youtubeReady = false;
+let youtubePlaylistReady = false;
 let shuffleOn = false;
 let seekInterval = null;
 let trackDuration = 0;

@@ -52,6 +52,7 @@ function createYouTubePlayer() {
 function replaceYouTubePlayerForSelectedPlaylist() {
   if (!youtubeReady || !activePlaylist?.playlistId) return;
   youtubeReady = false;
+  youtubePlaylistReady = false;
   youtubePlayer?.destroy();
   youtubePlayer = null;
   const mount = document.createElement('div');
@@ -64,6 +65,7 @@ function replaceYouTubePlayerForSelectedPlaylist() {
 function onYouTubeReady(event, generation, playlistId) {
   if (generation !== youtubePlayerGeneration) return;
   youtubeReady = true;
+  youtubePlaylistReady = false;
   if (activePlaylist?.playlistId?.trim() !== playlistId) {
     replaceYouTubePlayerForSelectedPlaylist();
     return;
@@ -71,25 +73,34 @@ function onYouTubeReady(event, generation, playlistId) {
   youtubePlayer.setLoop(true);
   applyVolume();
   updatePlayerControls();
+  youtubePlayer.cuePlaylist({ listType: 'playlist', list: playlistId, index: 0 });
 }
 
 function onYouTubeStateChange(event, generation) {
   if (generation !== youtubePlayerGeneration) return;
   const playing = event.data === YT.PlayerState.PLAYING;
+  if (playing || event.data === YT.PlayerState.CUED) {
+    youtubePlaylistReady = true;
+    updatePlayerControls();
+  }
   setPlaying(playing);
   clearInterval(seekInterval);
   if (playing) seekInterval = setInterval(updateSeek, 500);
   updateSeek();
-  if (event.data === YT.PlayerState.BUFFERING) playerHint.textContent = 'Loading';
-  if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PAUSED) {
-    const title = youtubePlayer.getVideoData()?.title;
-    playerHint.textContent = title || activePlaylist?.title || '';
+  if (event.data === YT.PlayerState.BUFFERING) {
+    const hasTrackInfo = syncTrackInfo();
+    if (!hasTrackInfo && !lastTrackKey) playerHint.textContent = 'Loading';
   }
-  if (playing || event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PAUSED) syncTrackInfo(true);
+  if (playing || event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PAUSED) syncTrackInfo();
 }
 
 function onYouTubeError(event, generation) {
   if (generation !== youtubePlayerGeneration) return;
+  const playlist = youtubePlayer?.getPlaylist?.() || [];
+  if (youtubeReady && playlist.length) {
+    youtubePlaylistReady = true;
+    updatePlayerControls();
+  }
   const errorMessages = {
     2: 'YouTube rejected this playlist request (error 2). Check the playlist link or ID.',
     5: 'This video could not play in the embedded player.',
@@ -105,34 +116,60 @@ function onYouTubeError(event, generation) {
 
 let lastTrackKey = '';
 let coverVideoId = '';
+let coverRequestId = 0;
 
-function syncTrackInfo(force = false) {
+function syncTrackInfo() {
   const data = youtubePlayer?.getVideoData?.() || {};
-  if (!data.video_id) return;
-  const key = `${data.video_id}|${data.title || ''}`;
-  if (!force && key === lastTrackKey) return;
-  lastTrackKey = key;
-  playerHint.textContent = data.title || activePlaylist?.title || '';
-  setCoverArt(data.video_id);
+  if (!data.video_id || !data.title) return false;
+  const key = `${data.video_id}|${data.title}`;
+  if (key !== lastTrackKey) {
+    lastTrackKey = key;
+    setCoverArt(data.video_id);
+  }
+  playerHint.textContent = data.title;
+  return true;
 }
 
 function setCoverArt(videoId) {
   if (!vinylArt || videoId === coverVideoId) return;
   coverVideoId = videoId;
-  const url = youtubeThumb(videoId);
-  const image = new Image();
-  image.onload = () => {
-    if (coverVideoId !== videoId) return;
-    vinylArt.style.backgroundImage = `url("${url}")`;
-    vinylArt.classList.add('has-cover');
+  const requestId = ++coverRequestId;
+  restoreDefaultCoverArt();
+  const urls = youtubeThumbs(videoId);
+  let urlIndex = 0;
+  const loadNextThumbnail = () => {
+    if (coverRequestId !== requestId || coverVideoId !== videoId) return;
+    const url = urls[urlIndex++];
+    if (!url) {
+      restoreDefaultCoverArt();
+      return;
+    }
+    const image = new Image();
+    image.onload = () => {
+      if (coverRequestId !== requestId || coverVideoId !== videoId) return;
+      // YouTube may return its small missing-size placeholder as a valid image.
+      if (image.naturalWidth <= 120 && image.naturalHeight <= 90) {
+        loadNextThumbnail();
+        return;
+      }
+      vinylArt.style.backgroundImage = `url("${url}")`;
+      vinylArt.classList.add('has-cover');
+    };
+    image.onerror = loadNextThumbnail;
+    image.src = url;
   };
-  image.src = url;
+  loadNextThumbnail();
+}
+
+function restoreDefaultCoverArt() {
+  if (!vinylArt) return;
+  vinylArt.style.backgroundImage = '';
+  vinylArt.classList.remove('has-cover');
 }
 
 function resetTrackInfo() {
   lastTrackKey = '';
   coverVideoId = '';
-  if (!vinylArt) return;
-  vinylArt.style.backgroundImage = '';
-  vinylArt.classList.remove('has-cover');
+  coverRequestId += 1;
+  restoreDefaultCoverArt();
 }

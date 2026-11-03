@@ -20,6 +20,9 @@
   .playlist-label { width: 94px; font-size: 10px; }.control-button { width: 33px; height: 39px; padding: 7px; }.small-control { width: 30px; }.play-control { width: 41px; height: 41px; }
   .faq-list summary { font-size: 16px; }.faq-list details p { font-size: 15px; }
   .footer-credit { font-size: 14px; }
+  .footer-disclaimer { font-size: 12px; }
+  .footer-tagline { font-size: 12px; }
+  .footer-url { font-size: 11px; }
   .about-section { min-height: max(92svh, 740px); padding: 82px 24px 76px; background: radial-gradient(ellipse at 50% 0%, rgba(88,97,132,.2), transparent 54%), linear-gradient(180deg, rgba(16,20,31,.45) 0%, rgba(16,20,31,.7) 15%, rgba(16,20,31,.85) 30%, rgba(16,20,31,.85) 82%, rgba(16,20,31,.78) 100%); }
 }
 @media (max-width: 420px) {

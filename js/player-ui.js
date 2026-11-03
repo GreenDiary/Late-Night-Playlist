@@ -1,17 +1,19 @@
 const PLAYLISTS = window.LATE_NIGHT_PLAYLISTS;
 
 function updatePlayerControls() {
-  const enabled = Boolean(activePlaylist?.playlistId && youtubeReady);
-  [playButton, volumeButton, shuffleButton, previousButton, nextButton].forEach((button) => {
-    button.disabled = !enabled;
+  const playerReady = Boolean(activePlaylist?.playlistId && youtubeReady);
+  const playlistReady = playerReady && youtubePlaylistReady;
+  [playButton, shuffleButton, previousButton, nextButton].forEach((button) => {
+    button.disabled = !playlistReady;
   });
-  volumeSlider.disabled = !enabled;
+  volumeButton.disabled = !playerReady;
+  volumeSlider.disabled = !playerReady;
   playlistButtons.forEach((button) => {
     const selected = button.dataset.playlist === activePlaylist?.id;
     button.classList.toggle('active', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
-  seekSlider.disabled = !(enabled && trackDuration > 0);
+  seekSlider.disabled = !(playlistReady && trackDuration > 0);
 }
 
 function setPlaylistMenuOpen(open) {
@@ -63,6 +65,16 @@ document.addEventListener('click', (event) => {
   if (!musicConsole.contains(event.target)) setPlaylistMenuOpen(false);
   if (!volumeControl.contains(event.target)) setVolumePanelOpen(false);
 });
+document.addEventListener('focusout', (event) => {
+  if (event.target instanceof Element) {
+    event.target.closest('.player-controls button')?.classList.remove('space-shortcut-source');
+  }
+});
+document.addEventListener('pointerdown', (event) => {
+  if (event.target instanceof Element) {
+    event.target.closest('.player-controls button')?.classList.remove('space-shortcut-source');
+  }
+});
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && playlistToggle.getAttribute('aria-expanded') === 'true') {
     setPlaylistMenuOpen(false);
@@ -72,10 +84,24 @@ document.addEventListener('keydown', (event) => {
     setVolumePanelOpen(false);
     volumeButton.focus();
   }
+  const isSpace = event.code === 'Space' || event.key === ' ';
+  const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+  const targetIsElement = event.target instanceof Element;
+  const playerControlButton = targetIsElement ? event.target.closest('.player-controls button') : null;
+  const targetIsControl = targetIsElement
+    && event.target.closest('button, a[href], input, textarea, select, summary, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="slider"]');
+  const playbackShortcutTarget = !targetIsControl || playerControlButton;
+  if (!isSpace) playerControlButton?.classList.remove('space-shortcut-source');
+  if (isSpace && !event.repeat && !event.defaultPrevented && !hasModifier && playbackShortcutTarget) {
+    event.preventDefault();
+    playerControlButton?.classList.add('space-shortcut-source');
+    togglePlayback();
+  }
 });
 
 function choosePlaylist(id) {
   resetTrackInfo();
+  youtubePlaylistReady = false;
   activePlaylist = PLAYLISTS.find((playlist) => playlist.id === id) || null;
   document.querySelector('.hero').classList.toggle('has-active-player', Boolean(activePlaylist?.playlistId) && !HIDE_YOUTUBE_PLAYER);
   shuffleOn = false;
@@ -131,7 +157,7 @@ function updateSeek() {
   seekCurrent.textContent = formatMediaTime(current);
   seekDuration.textContent = formatMediaTime(trackDuration);
   seekSlider.style.setProperty('--seek-progress', trackDuration ? `${(current / trackDuration) * 100}%` : '0%');
-  seekSlider.disabled = !(activePlaylist?.playlistId && trackDuration > 0);
+  seekSlider.disabled = !(activePlaylist?.playlistId && youtubeReady && youtubePlaylistReady && trackDuration > 0);
 }
 
 function resetSeek() {
@@ -152,17 +178,43 @@ function setPlaying(playing) {
   pauseIcon.classList.toggle('hidden', !playing);
   playButton.classList.toggle('is-playing', playing);
   glassPlayer.classList.toggle('is-playing', playing);
+  playlistButtons.forEach((button) => {
+    button.classList.toggle('is-playing', playing && button.dataset.playlist === activePlaylist?.id);
+  });
   playButton.setAttribute('aria-label', playing ? 'Pause' : 'Play');
 }
-playButton.addEventListener('click', () => {
-  if (!youtubeReady || !activePlaylist?.playlistId) return;
+function togglePlayback() {
+  if (!youtubeReady || !youtubePlaylistReady || !activePlaylist?.playlistId) return;
   if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) youtubePlayer.pauseVideo();
   else youtubePlayer.playVideo();
+}
+playButton.addEventListener('click', togglePlayback);
+previousButton.addEventListener('click', () => {
+  if (youtubeReady && youtubePlaylistReady) youtubePlayer?.previousVideo();
 });
-previousButton.addEventListener('click', () => youtubePlayer?.previousVideo());
-nextButton.addEventListener('click', () => youtubePlayer?.nextVideo());
+function playNextDistinctVideo() {
+  if (!youtubeReady || !youtubePlaylistReady || !youtubePlayer) return;
+  const playlist = youtubePlayer.getPlaylist?.() || [];
+  const videoDataId = youtubePlayer.getVideoData?.()?.video_id;
+  let currentIndex = youtubePlayer.getPlaylistIndex?.() ?? -1;
+  if (!Array.isArray(playlist) || playlist.length < 2) return;
+  if (!Number.isInteger(currentIndex) || currentIndex < 0 || currentIndex >= playlist.length) {
+    currentIndex = playlist.indexOf(videoDataId);
+  }
+  if (currentIndex < 0) return;
+  const currentVideoId = playlist[currentIndex] || videoDataId;
+
+  for (let offset = 1; offset < playlist.length; offset += 1) {
+    const nextIndex = (currentIndex + offset) % playlist.length;
+    if (playlist[nextIndex] && playlist[nextIndex] !== currentVideoId) {
+      youtubePlayer.playVideoAt(nextIndex);
+      return;
+    }
+  }
+}
+nextButton.addEventListener('click', playNextDistinctVideo);
 shuffleButton.addEventListener('click', () => {
-  if (!youtubeReady) return;
+  if (!youtubeReady || !youtubePlaylistReady) return;
   shuffleOn = !shuffleOn;
   youtubePlayer.setShuffle(shuffleOn);
   shuffleButton.setAttribute('aria-pressed', String(shuffleOn));
@@ -174,7 +226,7 @@ seekSlider.addEventListener('input', () => {
   seekSlider.style.setProperty('--seek-progress', `${progress}%`);
 });
 seekSlider.addEventListener('change', () => {
-  if (youtubeReady && trackDuration > 0) youtubePlayer.seekTo(Number(seekSlider.value), true);
+  if (youtubeReady && youtubePlaylistReady && trackDuration > 0) youtubePlayer.seekTo(Number(seekSlider.value), true);
   isSeeking = false;
   updateSeek();
 });

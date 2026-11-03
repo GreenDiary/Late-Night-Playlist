@@ -1,0 +1,130 @@
+.donation-toggle {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border: 1px solid rgba(228, 215, 192, .3);
+  border-radius: 999px;
+  background: rgba(16, 20, 31, .4);
+  color: #e4d7c0;
+  font-size: 11px;
+  letter-spacing: .15px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, transform .18s;
+}
+.site-header nav .donation-toggle { color: #e4d7c0; font-size: 11px; text-decoration: none; transition: background .18s, border-color .18s, color .18s, transform .18s; }
+.donation-toggle:hover, .site-header nav .donation-toggle:hover { transform: translateY(-1px); border-color: rgba(228, 215, 192, .62); background: rgba(228, 215, 192, .1); color: #fff; }
+.donation-toggle:focus-visible, .donation-close:focus-visible, .donation-coffee:focus-visible { outline: 2px solid #e4d7c0; outline-offset: 3px; }
+
+.donation-dialog {
+  width: min(440px, calc(100vw - 28px));
+  max-width: none;
+  max-height: 92vh;
+  max-height: min(92dvh, 720px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(242, 239, 247, .2);
+  border-radius: 28px;
+  background: transparent;
+  color: var(--ink, #f1eff7);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .54);
+  overscroll-behavior: contain;
+}
+.donation-dialog::backdrop { background: rgba(6, 8, 15, .72); backdrop-filter: blur(7px); }
+.donation-dialog[open] { animation: donation-dialog-open .18s ease-out both; }
+@keyframes donation-dialog-open {
+  from { opacity: 0; transform: translateY(9px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.donation-panel {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 26px 26px;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(34, 40, 57, .97), rgba(15, 19, 29, .98));
+  text-align: center;
+  backdrop-filter: blur(24px);
+}
+.donation-heading-row { display: flex; width: 100%; min-height: 34px; align-items: center; justify-content: center; }
+.donation-heading-row h2 { margin: 0; color: #f1eff7; font-family: "Newsreader", Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 450; letter-spacing: -.35px; line-height: 1.15; }
+.donation-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0 0 3px;
+  border: 1px solid rgba(242, 239, 247, .16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .04);
+  color: rgba(242, 239, 247, .8);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.donation-close:hover { border-color: rgba(228, 215, 192, .48); background: rgba(228, 215, 192, .1); color: #fff; }
+.donation-qr {
+  display: block;
+  width: min(260px, 66vw, 38vh);
+  max-width: 100%;
+  max-height: 38vh;
+  height: auto;
+  margin: 17px auto 18px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, .85);
+  border-radius: 18px;
+  background: #fff;
+  object-fit: contain;
+}
+.donation-instruction { margin: 0 0 7px; color: #e4d7c0; font-size: 14px; letter-spacing: .25px; }
+#donation-message { max-width: 350px; margin: 0; color: rgba(242, 239, 247, .86); font-size: 15px; line-height: 1.55; }
+.donation-actions { display: flex; width: 100%; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin-top: 17px; }
+.donation-coffee {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 0;
+  padding: 8px 16px;
+  border: 1px solid rgba(228, 215, 192, .31);
+  border-radius: 999px;
+  background: rgba(228, 215, 192, .08);
+  color: #e4d7c0;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background .18s, border-color .18s, transform .18s;
+}
+.donation-coffee:hover { transform: translateY(-1px); border-color: rgba(228, 215, 192, .62); background: rgba(228, 215, 192, .15); }
+.donation-coffee img { display: block; width: 30px; height: 24px; object-fit: contain; }
+.donation-save-qr img { width: 22px; height: 22px; }
+
+@media (max-width: 760px) {
+  .site-header nav { gap: 10px; }
+  .donation-toggle { min-height: 38px; padding: 7px 10px; font-size: 11px; }
+  .donation-panel { padding: 22px 20px 23px; }
+  .donation-qr { margin: 14px auto 15px; }
+}
+@media (max-width: 420px) {
+  .site-header nav { gap: 8px; }
+  .donation-toggle { min-height: 36px; padding: 6px 8px; font-size: 10px; }
+}
+@media (max-width: 360px) {
+  .site-header { padding-right: 14px; padding-left: 14px; }
+  .site-header nav { gap: 6px; }
+  .site-header nav a { font-size: 11px; }
+  .brand { gap: 5px; font-size: 11px; }
+  .brand-moon { font-size: 21px; }
+  .share-whatsapp { width: 34px; height: 34px; }
+  .share-whatsapp svg { width: 19px; height: 19px; }
+  .donation-toggle { min-height: 34px; padding: 5px 6px; font-size: 9.5px; }
+}

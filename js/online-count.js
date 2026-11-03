@@ -1,4 +1,11 @@
-import { firebaseConfig } from './online-count-config.js';
+let firebaseConfig = {};
+try {
+  const localConfig = await import('./online-count-config.local.js');
+  if (localConfig.firebaseConfig && typeof localConfig.firebaseConfig === 'object') {
+    firebaseConfig = localConfig.firebaseConfig;
+  }
+} catch {
+}
 
 const counter = document.querySelector('#online-counter');
 const countValue = document.querySelector('#online-count-value');

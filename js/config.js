@@ -1,5 +1,6 @@
 const HIDE_YOUTUBE_PLAYER = true;
 
-function youtubeThumb(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/hq720.jpg`;
+function youtubeThumbs(videoId) {
+  const sizes = ['hq720', 'maxresdefault', 'sddefault', 'hqdefault', 'mqdefault'];
+  return sizes.map((size) => `https://i.ytimg.com/vi/${videoId}/${size}.jpg`);
 }

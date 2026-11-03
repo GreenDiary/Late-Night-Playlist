@@ -1,36 +1,38 @@
 # Late Night Playlist
 
-A calm, anime-inspired night room for listening to curated music. The site is free to use, works on desktop and mobile, and does not require an account or app.
-
-**Live site:** [latenightplaylist.web.app](https://latenightplaylist.web.app)
+A responsive, browser-based music player for late-night listening. It uses the YouTube IFrame Player API and includes Hindi, Bengali, Punjabi, and lo-fi/instrumental playlists.
 
 ## Features
 
-- Hindi, Bengali, Punjabi, and Lo-fi & instrumental playlists, played through YouTube.
-- Player controls for play/pause, previous/next, shuffle, volume, and seeking.
-- Night-room artwork, live clock, responsive layout, WhatsApp sharing, and contact link.
-- Approximate live online count powered by Firebase Realtime Database.
+- Play, pause, previous, next, shuffle, volume, and seek controls.
+- Keyboard playback shortcut with Space, plus standard keyboard access to controls.
+- Vinyl artwork that uses the current song's YouTube thumbnail when available and the built-in CSS vinyl when no usable thumbnail is available.
+- Audio-wave animation while music is playing, including beside the selected playlist category.
+- Responsive nighttime layout, live clock, About section, and WhatsApp sharing.
+- Optional contact, donation, and online-count integrations. These use ignored local configuration files and are hidden until configured.
 
-## Project files
+## Run locally
 
-| File or folder | Purpose |
-| --- | --- |
-| `index.html` | Page structure and scripts/styles loaded by the browser |
-| `assets/` | Room background image and crescent-moon favicon |
-| `css/` | Page, player, About section, motion, and responsive styles |
-| `js/main.js` | Starts the page features |
-| `js/config.js` | Player display settings and thumbnail helper |
-| `js/playlists.js` | Playlist names and YouTube playlist IDs |
-| `js/player-ui.js`, `js/state.js`, `js/youtube.js` | Player interface, playback state, and YouTube integration |
-| `js/clock.js`, `js/share.js`, `js/contact.js` | Clock, WhatsApp sharing, and contact button |
-| `js/contact-address.js` | Editable contact email address |
-| `js/online-count.js`, `js/online-count-config.js` | Firebase-powered online count and its web-app settings |
-| `firebase.json`, `.firebaserc` | Firebase Hosting sites, redirects, and project aliases |
-| `firebase.database.rules.json` | Realtime Database rules for the online count |
-| `.gitignore` | Keeps local cache and machine-specific files out of Git |
+Serve `index.html` with a local web server, such as the VS Code Live Server extension. The player needs an internet connection to load the YouTube IFrame Player API and playlist videos.
 
-## Run and publish
+## Optional local configuration
 
-Preview the site through a local web server, such as VS Code Live Server. To publish Hosting changes, open a terminal in this project folder and run `firebase deploy --only hosting`. The site uses YouTube embeds; playlist availability and playback conditions are controlled by YouTube and playlist owners.
+The public copy contains no API key, contact address, payment QR, Firebase project identifier, deployment configuration, or site-verification token. To enable an optional integration, create its matching `.local.js` file from the corresponding `.example.js` template, enter your own values, and keep the local file untracked. `.gitignore` excludes these local files and the donation QR asset.
 
-**Contact:** [techie.lnp@gmail.com](mailto:techie.lnp@gmail.com)
+- `js/contact-address.example.js` — public contact email used by the Contact control.
+- `js/donation-config.example.js` — donation link and optional local QR image path.
+- `js/online-count-config.example.js` — Firebase web-app settings for the optional online counter.
+
+Do not paste private keys, passwords, or service-account credentials into this static site. The online counter is disabled unless its local configuration is present and complete.
+
+## Project structure
+
+- `index.html` — page content and script/style loading.
+- `assets/` — room background, favicon, interface icons, and fonts.
+- `css/` — page, player, motion, donation, and responsive styles.
+- `js/config.js`, `js/playlists.js` — player settings and playlist IDs.
+- `js/state.js`, `js/player-ui.js`, `js/youtube.js` — playback state, controls, and YouTube integration.
+- `js/share.js`, `js/clock.js`, `js/hero-kinetic.js` — sharing, clock, and hero motion.
+- `js/contact.js`, `js/donation.js`, `js/online-count.js` — optional integrations, disabled until locally configured.
+
+The playlist IDs in `js/playlists.js` point to public YouTube playlists. Playlist availability and playback are controlled by YouTube and the playlist owners.
