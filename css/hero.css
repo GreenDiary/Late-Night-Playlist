@@ -1,0 +1,59 @@
+@font-face {
+  font-family: "Newsreader";
+  src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../assets/fonts/newsreader-italic-latin.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  min-height: min(820px, max(620px, calc(100svh - 260px)));
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+}
+.hero.has-active-player { min-height: max(880px, calc(100svh + 10px)); }
+.hero.has-active-player .hero-copy { top: 12%; }
+.hero.has-active-player .hero-copy h1 { font-size: clamp(42px, 5vw, 56px); }
+.hero-shade { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(8, 12, 22, .69), rgba(9, 13, 23, .2) 54%, rgba(9, 13, 23, .08)), linear-gradient(0deg, rgba(8, 12, 20, .65), transparent 45%); }
+.site-header { position: absolute; z-index: 2; top: 0; left: 0; display: flex; width: 100%; height: 76px; align-items: center; justify-content: space-between; padding: 0 clamp(24px, 6vw, 88px); }
+.brand-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; letter-spacing: .4px; text-decoration: none; }
+.brand-moon { color: #edddb9; font-size: 26px; }
+.online-counter { display: inline-flex; align-items: center; gap: 6px; margin-left: 36px; color: rgba(242,239,247,.72); font-size: 11px; letter-spacing: .45px; line-height: 1.2; pointer-events: none; user-select: none; }
+.online-dot { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: rgba(190,198,210,.55); }
+.online-counter.is-online .online-dot { background: #65e88f; box-shadow: 0 0 5px rgba(101,232,143,.9), 0 0 12px rgba(101,232,143,.55); animation: online-pulse 1.8s ease-in-out infinite; }
+@keyframes online-pulse { 50% { box-shadow: 0 0 8px rgba(101,232,143,1), 0 0 16px rgba(101,232,143,.7); } }
+.site-header nav { display: flex; align-items: center; gap: 20px; }
+.site-header nav a, .footer-row > a:last-child { color: rgba(242,239,247,.78); font-size: 11px; text-decoration: none; transition: color .2s; }
+.site-header nav a:hover, .footer-row > a:last-child:hover { color: #fff; }
+.share-whatsapp { display: grid; width: 34px; height: 34px; place-items: center; padding: 0; border: 1px solid rgba(82,215,128,.28); border-radius: 50%; background: rgba(37,211,102,.1); color: #8ce3a8; cursor: pointer; transition: background .18s, border-color .18s, transform .18s; }
+.share-whatsapp:hover { transform: translateY(-1px); border-color: rgba(82,215,128,.56); background: rgba(37,211,102,.18); }
+.share-whatsapp:focus-visible { outline: 2px solid #8ce3a8; outline-offset: 3px; }
+.share-whatsapp svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
+.hero-copy { position: absolute; top: 23%; left: clamp(26px, 8vw, 120px); max-width: 440px; }
+.live-time { display: block; color: #f1e4ca; font-size: 20px; font-variant-numeric: tabular-nums; letter-spacing: 1.1px; }
+.live-date { margin: 4px 0 24px; color: rgba(242,239,247,.69); font-size: 10px; letter-spacing: .9px; }
+.hero-copy h1 { margin: 0; font-family: "Newsreader", Georgia, "Times New Roman", serif; font-size: clamp(43px, 6vw, 68px); font-weight: 400; font-optical-sizing: auto; letter-spacing: -2.8px; line-height: 1.08; text-shadow: 0 4px 32px rgba(0,0,0,.28); }
+.hero-copy em, .section-intro em { color: #e4d7c0; font-weight: 400; }
+
+.hero-kinetic__line { white-space: normal; }
+.hero-kinetic__word { display: inline-block; white-space: nowrap; }
+.hero-kinetic__glyph {
+  display: inline-block;
+  font-variation-settings: "wght" var(--hero-glyph-weight, 400);
+  transform: translateY(var(--hero-glyph-offset-y, 0px)) scaleX(var(--hero-glyph-scale-x, 1)) scaleY(var(--hero-glyph-scale-y, 1));
+  transform-origin: center 58%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-kinetic__glyph { font-variation-settings: "wght" 400; transform: none; }
+}

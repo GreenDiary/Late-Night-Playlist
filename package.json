@@ -1,0 +1,16 @@
+{
+  "name": "late-night-playlist",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/sync-public-assets.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/sync-public-assets.mjs",
+    "build": "next build"
+  },
+  "dependencies": {
+    "next": "^16.4.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}
