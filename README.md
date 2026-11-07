@@ -1,6 +1,6 @@
 # Late Night Playlist
 
-A responsive browser-based music player for late-night listening. The project uses the Next.js App Router and exports static HTML, CSS, and JavaScript for Firebase Hosting. It does not require a Next.js server at runtime.
+A responsive browser-based music player for late-night listening. The project uses the Next.js App Router and exports static HTML, CSS, and JavaScript for Firebase Hosting. It does not require a Next.js server at runtime. The web player is publically live at - https://latenightplaylist.web.app/
 
 ## Features
 
